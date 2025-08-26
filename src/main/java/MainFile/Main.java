@@ -14,12 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        RegularCheck info = new RegularCheck();
-        Runnable task = info.getTask();
-
-        RegularCheck.SCEDULER.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
-
-
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new Bot("7997682354:AAGk6apnbDP1CAQrHKHgFUaiDWUWCeZMvp4",

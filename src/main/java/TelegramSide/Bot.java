@@ -17,10 +17,14 @@ public class Bot extends TelegramLongPollingBot {
     private final String botName;
     private final String chatId;
 
+    private UbytovanieStatement state;
+
     public Bot(String token, String botName, String chatId) {
         this.token = token;
         this.botName = botName;
         this.chatId = chatId;
+
+        state = new UbytovanieStatement();
 
         RegularCheck.SCEDULER.scheduleAtFixedRate(this::checkStatus, 0, 10, TimeUnit.SECONDS);
     }
@@ -42,11 +46,8 @@ public class Bot extends TelegramLongPollingBot {
 
     private void checkStatus() {
         try {
-            UbytovanieStatement state = new UbytovanieStatement();
-            if(!state.isStatementPodana()) {
-                while(true) {
-                    sendMessage("Внимание!!! Общежития светит!!!1!1111!!!1");
-                }
+            if(state.isStatementPodana()) {
+                sendMessage("Внимание!!! Общежития светит!!!1!1111!!!1");
             }
         }catch (Exception e) {
             e.printStackTrace();
