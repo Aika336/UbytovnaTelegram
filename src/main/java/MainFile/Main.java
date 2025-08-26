@@ -20,14 +20,14 @@ public class Main {
         RegularCheck.SCEDULER.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
 
 
-        /*try {
+        try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new Bot("7997682354:AAGk6apnbDP1CAQrHKHgFUaiDWUWCeZMvp4",
-                    "MladostChecker"));
+                    "MladostChecker", "6759414701"));
 
             System.out.println("Bot is working!");
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
-        }*/
+        }
     }
 }

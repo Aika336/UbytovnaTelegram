@@ -7,13 +7,22 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import core.*;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 public class Bot extends TelegramLongPollingBot {
     private final String token;
     private final String botName;
+    private final String chatId;
 
-    public Bot(String token, String botName) {
+    public Bot(String token, String botName, String chatId) {
         this.token = token;
         this.botName = botName;
+        this.chatId = chatId;
+
+        RegularCheck.SCEDULER.scheduleAtFixedRate(this::checkStatus, 0, 10, TimeUnit.SECONDS);
     }
 
     @Override
@@ -28,19 +37,29 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String chatId = update.getMessage().getChatId().toString();
-            String text = update.getMessage().getText();
 
-            sendMessage(chatId, text);
+    }
+
+    private void checkStatus() {
+        try {
+            UbytovanieStatement state = new UbytovanieStatement();
+            if(!state.isStatementPodana()) {
+                while(true) {
+                    sendMessage("Внимание!!! Общежития светит!!!1!1111!!!1");
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void sendMessage(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, text);
+    public void sendMessage(String text) {
         try {
-            execute(message);
-        } catch (TelegramApiException e) {
+            execute(SendMessage.builder()
+                    .chatId(chatId)
+                    .text(text)
+                    .build());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

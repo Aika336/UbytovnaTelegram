@@ -6,7 +6,7 @@ public class UbytovanieStatement {
     private Login user;
     private OutputStreamDocument outDoc;
 
-    UbytovanieStatement() {
+    public UbytovanieStatement() {
         try {
             user = new Login("https://ubytovanie.stuba.sk/new/sk/informacie/");
             outDoc = new OutputStreamDocument(user);
