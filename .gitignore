@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+### own files ###
+*.ser
+
 ### Eclipse ###
 .apt_generated
 .classpath
