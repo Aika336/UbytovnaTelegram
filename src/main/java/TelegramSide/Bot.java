@@ -22,7 +22,7 @@ public class Bot extends TelegramLongPollingBot {
     public Bot(String token, String botName, String chatId) {
         this.token = token;
         this.botName = botName;
-        this.chatId = chatId;
+        this.chatId = (chatId != null && !chatId.isBlank()) ? chatId : null;
 
         state = new UbytovanieStatement();
 
