@@ -8,8 +8,8 @@ public class RegularCheck {
     private UbytovanieStatement info;
     private Runnable task;
 
-    public RegularCheck() {
-        info = new UbytovanieStatement();
+    public RegularCheck(String loginName, String password, String old) {
+        info = new UbytovanieStatement(loginName, password, old);
         task = () -> {
             if(info.isStatementPodana()) {
                 System.out.println("ok");

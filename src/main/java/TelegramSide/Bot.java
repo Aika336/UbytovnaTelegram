@@ -10,7 +10,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import core.*;
 
 import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
+import static MainFile.Main.*;
 
 public class Bot extends TelegramLongPollingBot {
     private final String token;
@@ -24,8 +27,17 @@ public class Bot extends TelegramLongPollingBot {
         this.botName = botName;
         this.chatId = (chatId != null && !chatId.isBlank()) ? chatId : null;
 
-        if(this.chatId != null) {
-            state = new UbytovanieStatement();
+        if(this.chatId != null && configFileExists("config.properties")) {
+            String login;
+            String password;
+            String old; // может быть пустым — тогда бот в режиме /chatid
+
+            Properties props = loadProperties("config.properties");
+            login = props.getProperty("login");
+            password = props.getProperty("password");
+            old = props.getProperty("old");
+
+            state = new UbytovanieStatement(login, password, old);
             RegularCheck.SCEDULER.scheduleAtFixedRate(this::checkStatus, 0, 10, TimeUnit.SECONDS);
             System.out.println("Monitoring is working. Chat Id: " + this.chatId);
         }else {
@@ -54,14 +66,24 @@ public class Bot extends TelegramLongPollingBot {
 
         switch (text) {
             case "/chatid":
+                SendTo(senderChatId, "You'r chat id is "
+                + senderChatId);
+                break;
+            default:
+                if(chatId == null) {
+                    SendTo(senderChatId, "Please, use /chatid to get chat id");
+                }
                 break;
         }
     }
 
     private void checkStatus() {
         try {
-            if(state.isStatementPodana()) {
+            if(!state.isStatementPodana()) {
                 sendMessage("Внимание!!! Общежития светит!!!1!1111!!!1");
+                System.out.println("1");
+            }else {
+                System.out.println("0");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +95,6 @@ public class Bot extends TelegramLongPollingBot {
             execute(SendMessage.builder()
                     .chatId(targetChatId)
                     .text(text)
-                    .parseMode("HTML") 
                     .build());
         } catch (TelegramApiException e) {
             e.printStackTrace();

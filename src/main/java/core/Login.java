@@ -11,22 +11,23 @@ public class Login {
     private static final String COOKIE_FILE = "cookies.ser";
     private Map<String, String> cookies;
 
-    public Login(String login) throws IOException, ClassNotFoundException {
+    public Login(String loginName, String password, String old) throws IOException, ClassNotFoundException {
         try {
             loadCookies();
             if(!areCookiesValid()) {
                 System.out.println("Invalid cookies");
-                loginAndSave(login);
+                loginAndSave("https://ubytovanie.stuba.sk/new/sk/informacie/", loginName, password, old);
                 System.out.println("Now the cookies are available");
             }else {
                 System.out.println("Cookies are working!");
             }
-        }catch(Exception e) {
+        } catch(Exception e) {
             System.out.println("Invalid cookies(Exception)");
             try {
-                loginAndSave(login);
-            }catch(IOException ex) {
-                System.out.println("Та я рот ебал сука!!!!!!111");
+                loginAndSave("https://ubytovanie.stuba.sk/new/sk/informacie/", loginName, password, old);
+            } catch(IOException ex) {
+                System.out.println("Login failed completely: " + ex.getMessage());
+                cookies = new java.util.HashMap<>(); // пустые куки вместо null → избегаем NPE
             }
         }
     }
@@ -52,12 +53,13 @@ public class Login {
         }
     }
 
-    private void loginAndSave(String login) throws IOException {
+    private void loginAndSave(String login, String loginName, String password, String old)
+            throws IOException {
         Connection.Response loginResponse = Jsoup.connect(login)
                 .data("remember", "true")
-                .data("anyid", "xripak")
-                .data("password", "Matviy2006")
-                .data("acad_year", "17")
+                .data("anyid", loginName)
+                .data("password", password)
+                .data("acad_year", old)
                 .data("login", "true")
                 .method(Connection.Method.POST)
                 .execute();
