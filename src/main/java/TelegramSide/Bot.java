@@ -24,9 +24,13 @@ public class Bot extends TelegramLongPollingBot {
         this.botName = botName;
         this.chatId = (chatId != null && !chatId.isBlank()) ? chatId : null;
 
-        state = new UbytovanieStatement();
-
-        RegularCheck.SCEDULER.scheduleAtFixedRate(this::checkStatus, 0, 10, TimeUnit.SECONDS);
+        if(this.chatId != null) {
+            state = new UbytovanieStatement();
+            RegularCheck.SCEDULER.scheduleAtFixedRate(this::checkStatus, 0, 10, TimeUnit.SECONDS);
+            System.out.println("Monitoring is working. Chat Id: " + this.chatId);
+        }else {
+            System.out.println("Chat id is not setting, pls use /chatid to get it");
+        }
     }
 
     @Override
