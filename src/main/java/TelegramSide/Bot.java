@@ -52,6 +52,10 @@ public class Bot extends TelegramLongPollingBot {
         String senderUsername = update.getMessage().getFrom().getUserName();
         String senderName = update.getMessage().getFrom().getFirstName();
 
+        switch (text) {
+            case "/chatid":
+                break;
+        }
     }
 
     private void checkStatus() {
@@ -62,6 +66,19 @@ public class Bot extends TelegramLongPollingBot {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void SendTo(String targetChatId, String text) {
+        try {
+            execute(SendMessage.builder()
+                    .chatId(targetChatId)
+                    .text(text)
+                    .parseMode("HTML") 
+                    .build());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void sendMessage(String text) {
